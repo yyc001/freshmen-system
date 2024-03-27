@@ -1,5 +1,12 @@
-/media/storage
+*.pyc
+.idea
+*.log
+*.pot
+.vscode/
+__pycache__/
 */__pycache__/*
+.DS_Store
 */migrations/*
+
 db.sqlite3
-log/*
+/media/storage
