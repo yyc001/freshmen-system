@@ -6,7 +6,11 @@ from django.http import JsonResponse
 from src.models import GlobalSettings, ManualCheck, StudentInfo, User, UserPrivilege
 from src.utils import QuickResponse, commonPage, require_privilege, require_privilege_or
 
-
+def get_student_fields(request):
+    return JsonResponse({
+        "result":"success", 
+        "fields": StudentInfo.form_fields()
+    })
 
 @commonPage
 def get_student_list(request, user_self, parameters):

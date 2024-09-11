@@ -2,14 +2,19 @@ import React from "react";
 import { Layout, Menu, theme } from 'antd';
 import Link from "antd/es/typography/Link";
 import { useRouterState } from "@tanstack/react-router";
+import Cookies from 'js-cookie';
 
 const { Header, Content, Footer } = Layout;
 
 interface PageContentProps {
+    identity?: number[]
     children?: React.ReactNode
 }
 
 const PageContent: React.FC<PageContentProps> = ({children}) => {
+    const isStudent = Cookies.get('student') ?? 0;
+    const isAdmin = Cookies.get('admin') ?? 0;
+    const isInterviewer = Cookies.get('interviewer') ?? 0;
     const {
         token: { colorBgContainer, borderRadiusLG },
       } = theme.useToken();
@@ -34,7 +39,7 @@ const PageContent: React.FC<PageContentProps> = ({children}) => {
                     {
                         key: "/help",
                         label: <Link href="/help"> 帮助 </Link>
-                    },
+                    }].concat(isStudent ? [
                     {
                         key: "/reg/contact-details",
                         label: <Link href="/reg/contact-details"> 报名 · 第一步 </Link>
@@ -55,7 +60,7 @@ const PageContent: React.FC<PageContentProps> = ({children}) => {
                     {
                         key: "/reg/ready-submit",
                         label: <Link href="/reg/ready-submit"> 报名 · 第五步 </Link>
-                    },
+                    }] : []).concat(isAdmin ? [
                     {
                         key: "/manage/submissions",
                         label: <Link href="/manage/submissions"> 学生管理 </Link>
@@ -64,7 +69,7 @@ const PageContent: React.FC<PageContentProps> = ({children}) => {
                         key: "/manage/control-panel",
                         label: <Link href="/manage/control-panel"> 控制面板 </Link>
                     },
-                ]}
+                ] : [])}
             />
         </Header>
         <Content style={{ padding: '20px 48px' }}>

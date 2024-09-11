@@ -32,7 +32,7 @@ export const Route = createFileRoute('/reg/contact-details')({
       console.log(value)
       axios.post('/api/student/info/set', value)
       .then(response => {
-        alert(JSON.stringify(response.data))
+        // alert(JSON.stringify(response.data))
         window.location.href = "/reg/basic-info"
       })
       .catch((error: any) => {

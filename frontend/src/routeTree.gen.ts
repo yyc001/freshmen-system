@@ -13,31 +13,33 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as IndexImport } from './routes/index'
+import { Route as HelpIndexImport } from './routes/help/index'
 import { Route as RegServiceHallImport } from './routes/reg/service-hall'
 import { Route as RegReadySubmitImport } from './routes/reg/ready-submit'
+import { Route as RegNoticeImport } from './routes/reg/notice'
 import { Route as RegContactDetailsImport } from './routes/reg/contact-details'
 import { Route as RegBasicInfoImport } from './routes/reg/basic-info'
 import { Route as RegAttachmentsImport } from './routes/reg/attachments'
 import { Route as ManageSubmissionsImport } from './routes/manage/submissions'
+import { Route as HelpExamplesImport } from './routes/help/examples'
 import { Route as ManageViewUidImport } from './routes/manage/view.$uid'
 
 // Create Virtual Routes
 
-const HelpLazyImport = createFileRoute('/help')()
-const IndexLazyImport = createFileRoute('/')()
 const ManageControlPanelLazyImport = createFileRoute('/manage/control-panel')()
 
 // Create/Update Routes
 
-const HelpLazyRoute = HelpLazyImport.update({
-  path: '/help',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/help.lazy').then((d) => d.Route))
-
-const IndexLazyRoute = IndexLazyImport.update({
+const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+} as any)
+
+const HelpIndexRoute = HelpIndexImport.update({
+  path: '/help/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ManageControlPanelLazyRoute = ManageControlPanelLazyImport.update({
   path: '/manage/control-panel',
@@ -53,6 +55,11 @@ const RegServiceHallRoute = RegServiceHallImport.update({
 
 const RegReadySubmitRoute = RegReadySubmitImport.update({
   path: '/reg/ready-submit',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RegNoticeRoute = RegNoticeImport.update({
+  path: '/reg/notice',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -76,6 +83,11 @@ const ManageSubmissionsRoute = ManageSubmissionsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const HelpExamplesRoute = HelpExamplesImport.update({
+  path: '/help/examples',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ManageViewUidRoute = ManageViewUidImport.update({
   path: '/manage/view/$uid',
   getParentRoute: () => rootRoute,
@@ -86,11 +98,11 @@ const ManageViewUidRoute = ManageViewUidImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      preLoaderRoute: typeof IndexLazyImport
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/help': {
-      preLoaderRoute: typeof HelpLazyImport
+    '/help/examples': {
+      preLoaderRoute: typeof HelpExamplesImport
       parentRoute: typeof rootRoute
     }
     '/manage/submissions': {
@@ -109,6 +121,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegContactDetailsImport
       parentRoute: typeof rootRoute
     }
+    '/reg/notice': {
+      preLoaderRoute: typeof RegNoticeImport
+      parentRoute: typeof rootRoute
+    }
     '/reg/ready-submit': {
       preLoaderRoute: typeof RegReadySubmitImport
       parentRoute: typeof rootRoute
@@ -121,6 +137,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManageControlPanelLazyImport
       parentRoute: typeof rootRoute
     }
+    '/help/': {
+      preLoaderRoute: typeof HelpIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/manage/view/$uid': {
       preLoaderRoute: typeof ManageViewUidImport
       parentRoute: typeof rootRoute
@@ -131,15 +151,17 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  IndexLazyRoute,
-  HelpLazyRoute,
+  IndexRoute,
+  HelpExamplesRoute,
   ManageSubmissionsRoute,
   RegAttachmentsRoute,
   RegBasicInfoRoute,
   RegContactDetailsRoute,
+  RegNoticeRoute,
   RegReadySubmitRoute,
   RegServiceHallRoute,
   ManageControlPanelLazyRoute,
+  HelpIndexRoute,
   ManageViewUidRoute,
 ])
 

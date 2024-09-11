@@ -1,3 +1,4 @@
+import json
 import uuid
 from django.contrib import auth
 from django.contrib.auth.models import User as AuthUser
@@ -29,7 +30,8 @@ def login_debug(request):
     user.backend = 'django.contrib.auth.backends.ModelBackend'
     auth.login(request, user)
 
-    User.objects.update_or_create(uid=uid, defaults={"name": name})
+    user, _ = User.objects.update_or_create(uid=uid, defaults={"name": name})
+    # UserPrivilege.objects.get_or_create(user=user, privilege=UserPrivilege.Privilege.STUDENT.value)
     return QuickResponse.success()
 
 
@@ -77,7 +79,18 @@ def set_csrf_token_into_cookie(request):
 
 @commonPage
 def who_am_i(request, user_self, parameters):
-    return JsonResponse({
+    ret = {
         "name": user_self.name,
-        "uid": user_self.uid
-    })
+        "uid": user_self.uid,
+        "student": UserPrivilege.objects.filter(user=user_self, privilege=UserPrivilege.Privilege.STUDENT.value).count(),
+        "admin": UserPrivilege.objects.filter(user=user_self, privilege=UserPrivilege.Privilege.ADMIN.value).count(),
+        "interviewer": UserPrivilege.objects.filter(user=user_self, privilege=UserPrivilege.Privilege.INTERVIEWER.value).count(),
+    }
+    # print(ret)
+    # ret = {'name': '测试用户', 'uid': '202022300317', 'student': 1, 'admin': 0, 'interviewer': 0}
+    response =  JsonResponse(ret)
+    for name, value in ret.items():
+        if isinstance(value, str):
+            value = value.encode()
+        response.set_cookie(name, value)
+    return response

@@ -7,7 +7,7 @@ const onFinish = (value: any) => {
   console.log(value)
   axios.post('/api/student/info/set', value)
   .then(response => {
-    alert(JSON.stringify(response.data))
+    // alert(JSON.stringify(response.data))
     window.location.href = "/reg/attachments"
   })
   .catch((error: any) => {

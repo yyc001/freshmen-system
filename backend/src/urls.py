@@ -16,6 +16,7 @@ urlpatterns = [
     path('global/get', globals.get_open_time),
 
     path('student/list', stu_info.get_student_list),
+    path('student/info/fields', stu_info.get_student_fields),
     path('student/info/get', stu_info.get_student_info),
     path('student/info/set', stu_info.set_student_info),
     path('student/otp', stu_info.send_otp),
